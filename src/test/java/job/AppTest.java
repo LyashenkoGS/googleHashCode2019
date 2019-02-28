@@ -4,6 +4,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -22,9 +23,9 @@ public class AppTest {
      * Rigorous Test :-)
      */
     @Test
-    public void shouldAnswerWithTrue() throws IOException {
+    public void example() throws IOException {
         //read a file by lines
-        List<Photo> photos = parseFile("input/a_example.txt");
+        List<Photo> photos = parseFile("../input/a_example.txt");
         System.out.println(photos);
         //output
         Slideshow slideshow = new Slideshow();
@@ -40,7 +41,43 @@ public class AppTest {
         slideshow.slides.addAll(slides);
         System.out.println(slideshow);
         System.out.println(slideshow.toOuput());
-        Files.write(Paths.get("output/a_output.txt"), slideshow.toOuput().getBytes());
+        Files.createDirectories(Paths.get("../output"));
+        Files.write(Paths.get("../output/a_output.txt"), slideshow.toOuput().getBytes());
+    }
+
+    @Test
+    public void c_problem() throws IOException {
+        List<Photo> photos = parseFile("../input/c_memorable_moments.txt");
+        //get vertical photos
+        // System.out.println(photos);
+        List<Photo> verticalPhotos = new ArrayList<>();
+        for (Photo photo : photos) {
+            if (photo.orientation == 'V') {
+                verticalPhotos.add(photo);
+            }
+        }
+        System.out.println(verticalPhotos);
+        Slideshow slideshow = new Slideshow();
+        //if vertical -> get pair
+        for (int i = 0; i < verticalPhotos.size() - 1; i += 2) {
+            Slide slide = new Slide();
+            Photo photo1 = verticalPhotos.get(i);
+            Photo photo2 = verticalPhotos.get(i + 1);
+            slide.photos.add(photo1);
+            slide.photos.add(photo2);
+            slideshow.slides.add(slide);
+        }
+        //else  put single photo slides
+        photos.removeAll(verticalPhotos);
+        for (Photo photo : photos) {
+            Slide slide = new Slide();
+            slide.photos.add(photo);
+            slideshow.slides.add(slide);
+        }
+        slideshow.numberOfSlides = slideshow.slides.size();
+        System.out.println(slideshow);
+        Files.createDirectories(Paths.get("../output"));
+        Files.write(Paths.get("../output/c_output.txt"), slideshow.toOuput().getBytes());
     }
 
     class Slideshow {
