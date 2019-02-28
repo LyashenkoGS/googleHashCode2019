@@ -4,7 +4,6 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -19,6 +18,10 @@ import java.util.Set;
  * Unit test for simple App.
  */
 public class AppTest {
+
+    private static final String inputFolder = "../input/";
+    public static final String OUTPUT_FOLDER = "../output";
+
     /**
      * Rigorous Test :-)
      */
@@ -41,13 +44,21 @@ public class AppTest {
         slideshow.slides.addAll(slides);
         System.out.println(slideshow);
         System.out.println(slideshow.toOuput());
-        Files.createDirectories(Paths.get("../output"));
-        Files.write(Paths.get("../output/a_output.txt"), slideshow.toOuput().getBytes());
+        Files.createDirectories(Paths.get(OUTPUT_FOLDER));
+        Files.write(Paths.get(OUTPUT_FOLDER + "/a_output.txt"), slideshow.toOuput().getBytes());
     }
 
     @Test
     public void c_problem() throws IOException {
-        List<Photo> photos = parseFile("../input/c_memorable_moments.txt");
+        processTask("a_example.txt");
+        processTask("b_lovely_landscapes.txt");
+        processTask("d_pet_pictures.txt");
+        processTask("c_memorable_moments.txt");
+        processTask("e_shiny_selfies.txt");
+    }
+
+    private void processTask(String fileName) throws IOException {
+        List<Photo> photos = parseFile(inputFolder +fileName);
         //get vertical photos
         // System.out.println(photos);
         List<Photo> verticalPhotos = new ArrayList<>();
@@ -76,8 +87,8 @@ public class AppTest {
         }
         slideshow.numberOfSlides = slideshow.slides.size();
         System.out.println(slideshow);
-        Files.createDirectories(Paths.get("../output"));
-        Files.write(Paths.get("../output/c_output.txt"), slideshow.toOuput().getBytes());
+        Files.createDirectories(Paths.get(OUTPUT_FOLDER));
+        Files.write(Paths.get(OUTPUT_FOLDER + "/" + fileName), slideshow.toOuput().getBytes());
     }
 
     class Slideshow {
