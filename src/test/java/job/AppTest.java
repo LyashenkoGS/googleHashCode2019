@@ -7,12 +7,8 @@ import org.junit.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * Unit test for simple App.
@@ -43,14 +39,30 @@ public class AppTest {
 
         System.out.println(slideshow);
 
-        intersection()
+        Set<String> intersection = intersection(photo1.tags, photo2.tags);
+        Set<String> leftOuter = findDifferance(photo1.tags, intersection);
+        Set<String> rightOuter = findDifferance(photo2.tags, intersection);
 
-
-
-
+        System.out.println(findMin(intersection.size(), leftOuter.size(), rightOuter.size()));
 
 
     }
+
+    int findMin(int a, int b, int c){
+        return Stream.of(a, b, c).mapToInt(x -> x).min().getAsInt();
+    }
+
+
+
+    public Set<String> findDifferance(Set<String> a, Set<String> b){
+        Set<String> results = new HashSet<>(a);
+        results.removeAll(b);
+        return results;
+    }
+
+
+
+
 
     public static Set<String> intersection(Set<String> a, Set<String> b) {
         // unnecessary; just an optimization to iterate over the smaller set
