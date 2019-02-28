@@ -3,6 +3,7 @@ package job;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -22,21 +23,63 @@ public class AppTest {
 
     @Test
     public void SAT() throws IOException {
-        Slideshow a = processTask("a_example.txt");
         Slideshow b = processTask("b_lovely_landscapes.txt");
         Slideshow c = processTask("c_memorable_moments.txt");
         Slideshow d = processTask("d_pet_pictures.txt");
         Slideshow e = processTask("e_shiny_selfies.txt");
-        long a_result = resultScore(a);
         long b_result = resultScore(b);
         long c_result = resultScore(c);
         long d_result = resultScore(d);
         long e_result = resultScore(e);
-        System.out.println("a_result: " + a_result);
         System.out.println("b_result: " + b_result);
         System.out.println("c_result: " + c_result);
         System.out.println("d_result: " + d_result);
         System.out.println("e_result: " + e_result);
+        Assert.assertTrue(b_result >= 12);
+        Assert.assertTrue(c_result >= 152);
+        Assert.assertTrue(d_result >= 192962);
+        Assert.assertTrue(e_result >= 112468);
+    }
+
+    @Test
+    public void c_task() throws IOException {
+        Slideshow c = processTask("c_memorable_moments.txt");
+        long c_result = resultScore(c);
+        Assert.assertTrue(c_result >= 152);
+    }
+    private Slideshow processTask(String fileName) throws IOException {
+        List<Photo> photos = parseFile(inputFolder + fileName);
+        //get vertical photos
+        // System.out.println(photos);
+        List<Photo> verticalPhotos = new ArrayList<>();
+        for (Photo photo : photos) {
+            if (photo.orientation == 'V') {
+                verticalPhotos.add(photo);
+            }
+        }
+        //  System.out.println(verticalPhotos);
+        Slideshow slideshow = new Slideshow();
+        //if vertical -> get pair
+        for (int i = 0; i < verticalPhotos.size() - 1; i ++) {
+            Slide slide = new Slide();
+            Photo photo1 = verticalPhotos.get(i);
+            Photo photo2 = verticalPhotos.get(i + 1);
+            slide.photos.add(photo1);
+            slide.photos.add(photo2);
+            slideshow.slides.add(slide);
+        }
+        //else  put single photo slides
+        photos.removeAll(verticalPhotos);
+        for (Photo photo : photos) {
+            Slide slide = new Slide();
+            slide.photos.add(photo);
+            slideshow.slides.add(slide);
+        }
+        slideshow.numberOfSlides = slideshow.slides.size();
+        // System.out.println(slideshow);
+        Files.createDirectories(Paths.get(OUTPUT_FOLDER));
+        Files.write(Paths.get(OUTPUT_FOLDER + "/" + fileName), slideshow.toOuput().getBytes());
+        return slideshow;
     }
 
     @Test
@@ -144,40 +187,7 @@ public class AppTest {
     }
 
 
-    private Slideshow processTask(String fileName) throws IOException {
-        List<Photo> photos = parseFile(inputFolder + fileName);
-        //get vertical photos
-        // System.out.println(photos);
-        List<Photo> verticalPhotos = new ArrayList<>();
-        for (Photo photo : photos) {
-            if (photo.orientation == 'V') {
-                verticalPhotos.add(photo);
-            }
-        }
-      //  System.out.println(verticalPhotos);
-        Slideshow slideshow = new Slideshow();
-        //if vertical -> get pair
-        for (int i = 0; i < verticalPhotos.size() - 1; i += 2) {
-            Slide slide = new Slide();
-            Photo photo1 = verticalPhotos.get(i);
-            Photo photo2 = verticalPhotos.get(i + 1);
-            slide.photos.add(photo1);
-            slide.photos.add(photo2);
-            slideshow.slides.add(slide);
-        }
-        //else  put single photo slides
-        photos.removeAll(verticalPhotos);
-        for (Photo photo : photos) {
-            Slide slide = new Slide();
-            slide.photos.add(photo);
-            slideshow.slides.add(slide);
-        }
-        slideshow.numberOfSlides = slideshow.slides.size();
-       // System.out.println(slideshow);
-        Files.createDirectories(Paths.get(OUTPUT_FOLDER));
-        Files.write(Paths.get(OUTPUT_FOLDER + "/" + fileName), slideshow.toOuput().getBytes());
-        return slideshow;
-    }
+
 
 
     private List<Photo> parseFile(String fileName) throws IOException {
