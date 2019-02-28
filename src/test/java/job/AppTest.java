@@ -22,6 +22,67 @@ public class AppTest {
     private static final String inputFolder = "../input/";
     public static final String OUTPUT_FOLDER = "../output";
 
+    @Test
+    public void commonTagsTest(){
+
+        Slideshow slideshow = new Slideshow();
+        Photo photo1 = new Photo();
+        photo1.orientation='H';
+        photo1.tagsNumber =2;
+        photo1.tags.addAll(Arrays.asList("cat", "garden"));
+        Photo photo2 = new Photo();
+        photo2.orientation='H';
+        photo2.tagsNumber =3;
+        photo2.tags.addAll(Arrays.asList("garden", "selfie", "smile"));
+        Slide slide1 = new Slide();
+        Slide slide2 = new Slide();
+        slide1.photos.add(photo1);
+        slide2.photos.add(photo2);
+        slideshow.slides.addAll(Arrays.asList(slide1,slide2));
+        slideshow.numberOfSlides = 2;
+
+        System.out.println(slideshow);
+
+        intersection()
+
+
+
+
+
+
+    }
+
+    public static Set<Integer> intersection(Set<Stir> a, Set<Integer> b) {
+        // unnecessary; just an optimization to iterate over the smaller set
+        if (a.size() > b.size()) {
+            return intersection(b, a);
+        }
+
+        Set<Integer> results = new HashSet<>();
+
+        for (Integer element : a) {
+            if (b.contains(element)) {
+                results.add(element);
+            }
+        }
+
+        return results;
+    }
+
+//    long commonTags(Slideshow slideshow){
+//
+//
+//        for (int i = 0; i < slideshow.slides.size()-1; i++) {
+//            i+=2;
+//
+//
+//
+//        }
+//
+//
+//
+//    }
+
     /**
      * Rigorous Test :-)
      */
@@ -91,6 +152,56 @@ public class AppTest {
         Files.write(Paths.get(OUTPUT_FOLDER + "/" + fileName), slideshow.toOuput().getBytes());
     }
 
+
+    class App{
+        Slideshow slideshow = new Slideshow();
+
+        App() throws IOException {
+        }
+
+        void makeSlides(Photo photo){
+
+            boolean isTwoPhotosInSlide = false;
+
+            if (photo.orientation=='H'){
+                Slide slide = new Slide();
+                slide.photos.add(photo);
+                slideshow.slides.add(slide);
+            } else {
+                if (!isTwoPhotosInSlide){
+                    // 1 photo in slide
+                    Slide slide = new Slide();
+                    slide.photos.add(photo);
+                    isTwoPhotosInSlide=true;
+                } else {
+                    Slide slide = new Slide();
+                    slide.photos.add(photo);
+                    slideshow.slides.add(slide);
+                    isTwoPhotosInSlide=false;
+                }
+            }
+        }
+
+
+        List<Photo> photos = parseFile("../input/c_memorable_moments.txt");
+
+        @Test
+        void doStuff(){
+            for (Photo photo : photos) {
+
+            }
+        }
+
+
+    }
+
+
+
+
+
+
+
+
     class Slideshow {
         long numberOfSlides;
         List<Slide> slides = new ArrayList<>();
@@ -99,7 +210,7 @@ public class AppTest {
         public String toString() {
             return "Slideshow{" +
                     "numberOfSlides=" + numberOfSlides +
-                    ", slides=" + slides +
+                    ", slides=  \n" + slides +
                     '}';
         }
 
@@ -119,11 +230,12 @@ public class AppTest {
     class Slide {
         List<Photo> photos = new ArrayList<>();
 
+
         @Override
         public String toString() {
             return "Slide{" +
                     "photos=" + photos +
-                    '}';
+                    '}' + "\n";
         }
     }
 
@@ -152,7 +264,7 @@ public class AppTest {
         long id;
         char orientation;
         int tagsNumber;
-        Set<String> tags;
+        Set<String> tags = new HashSet<>();
 
         @Override
         public String toString() {
