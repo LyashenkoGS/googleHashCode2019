@@ -1,7 +1,9 @@
 package job;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -19,22 +21,22 @@ public class AppTest {
     public static final String OUTPUT_FOLDER = "../output";
 
     @Test
-    public void commonTagsTest(){
+    public void commonTagsTest() {
 
         Slideshow slideshow = new Slideshow();
         Photo photo1 = new Photo();
-        photo1.orientation='H';
-        photo1.tagsNumber =2;
+        photo1.orientation = 'H';
+        photo1.tagsNumber = 2;
         photo1.tags.addAll(Arrays.asList("cat", "garden"));
         Photo photo2 = new Photo();
-        photo2.orientation='H';
-        photo2.tagsNumber =3;
+        photo2.orientation = 'H';
+        photo2.tagsNumber = 3;
         photo2.tags.addAll(Arrays.asList("garden", "selfie", "smile"));
         Slide slide1 = new Slide();
         Slide slide2 = new Slide();
         slide1.photos.add(photo1);
         slide2.photos.add(photo2);
-        slideshow.slides.addAll(Arrays.asList(slide1,slide2));
+        slideshow.slides.addAll(Arrays.asList(slide1, slide2));
         slideshow.numberOfSlides = 2;
 
         System.out.println(slideshow);
@@ -43,25 +45,24 @@ public class AppTest {
         Set<String> leftOuter = findDifferance(photo1.tags, intersection);
         Set<String> rightOuter = findDifferance(photo2.tags, intersection);
 
+        assertEquals(intersection.toString(), "[garden]");
+        assertEquals(leftOuter.toString(), "[cat]");
+        assertEquals(rightOuter.toString(), "[selfie, smile]");
         System.out.println(findMin(intersection.size(), leftOuter.size(), rightOuter.size()));
 
 
     }
 
-    int findMin(int a, int b, int c){
+    int findMin(int a, int b, int c) {
         return Stream.of(a, b, c).mapToInt(x -> x).min().getAsInt();
     }
 
 
-
-    public Set<String> findDifferance(Set<String> a, Set<String> b){
+    public Set<String> findDifferance(Set<String> a, Set<String> b) {
         Set<String> results = new HashSet<>(a);
         results.removeAll(b);
         return results;
     }
-
-
-
 
 
     public static Set<String> intersection(Set<String> a, Set<String> b) {
@@ -81,19 +82,6 @@ public class AppTest {
         return results;
     }
 
-//    long commonTags(Slideshow slideshow){
-//
-//
-//        for (int i = 0; i < slideshow.slides.size()-1; i++) {
-//            i+=2;
-//
-//
-//
-//        }
-//
-//
-//
-//    }
 
     /**
      * Rigorous Test :-)
@@ -131,7 +119,7 @@ public class AppTest {
     }
 
     private void processTask(String fileName) throws IOException {
-        List<Photo> photos = parseFile(inputFolder +fileName);
+        List<Photo> photos = parseFile(inputFolder + fileName);
         //get vertical photos
         // System.out.println(photos);
         List<Photo> verticalPhotos = new ArrayList<>();
@@ -165,31 +153,31 @@ public class AppTest {
     }
 
 
-    class App{
+    class App {
         Slideshow slideshow = new Slideshow();
 
         App() throws IOException {
         }
 
-        void makeSlides(Photo photo){
+        void makeSlides(Photo photo) {
 
             boolean isTwoPhotosInSlide = false;
 
-            if (photo.orientation=='H'){
+            if (photo.orientation == 'H') {
                 Slide slide = new Slide();
                 slide.photos.add(photo);
                 slideshow.slides.add(slide);
             } else {
-                if (!isTwoPhotosInSlide){
+                if (!isTwoPhotosInSlide) {
                     // 1 photo in slide
                     Slide slide = new Slide();
                     slide.photos.add(photo);
-                    isTwoPhotosInSlide=true;
+                    isTwoPhotosInSlide = true;
                 } else {
                     Slide slide = new Slide();
                     slide.photos.add(photo);
                     slideshow.slides.add(slide);
-                    isTwoPhotosInSlide=false;
+                    isTwoPhotosInSlide = false;
                 }
             }
         }
@@ -198,7 +186,7 @@ public class AppTest {
         List<Photo> photos = parseFile("../input/c_memorable_moments.txt");
 
         @Test
-        void doStuff(){
+        void doStuff() {
             for (Photo photo : photos) {
 
             }
@@ -206,12 +194,6 @@ public class AppTest {
 
 
     }
-
-
-
-
-
-
 
 
     class Slideshow {
