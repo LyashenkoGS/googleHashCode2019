@@ -52,15 +52,15 @@ public class AppTest {
 
     }
 
-    public static Set<Integer> intersection(Set<Stir> a, Set<Integer> b) {
+    public static Set<String> intersection(Set<String> a, Set<String> b) {
         // unnecessary; just an optimization to iterate over the smaller set
         if (a.size() > b.size()) {
             return intersection(b, a);
         }
 
-        Set<Integer> results = new HashSet<>();
+        Set<String> results = new HashSet<>();
 
-        for (Integer element : a) {
+        for (String element : a) {
             if (b.contains(element)) {
                 results.add(element);
             }
